@@ -1,0 +1,38 @@
+{
+  "name": "@7polo/editorjs-image",
+  "version": "1.0.4",
+  "keywords": [
+    "tool",
+    "image",
+    "server-less",
+    "editor.js",
+    "editorjs"
+  ],
+  "description": "images tool for editorjs",
+  "main": "./dist/bundle.js",
+  "scripts": {
+    "build": "webpack --mode production",
+    "build:dev": "webpack --mode development --watch"
+  },
+  "dependencies": {
+    "viewerjs": "^1.10.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.3.4",
+    "@babel/preset-env": "^7.10.1",
+    "@testing-library/jest-dom": "^5.9.0",
+    "babel-jest": "^27.2.1",
+    "babel-loader": "^8.0.5",
+    "css-loader": "^3.6.0",
+    "eslint": "^7.1.0",
+    "eslint-config-airbnb-base": "^14.1.0",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-jest": "^23.13.2",
+    "jest": "^27.2.1",
+    "nock": "^12.0.3",
+    "style-loader": "^0.21.0",
+    "svg-inline-loader": "^0.8.2",
+    "webpack": "^5.53.0",
+    "webpack-cli": "^4.8.0"
+  }
+}
