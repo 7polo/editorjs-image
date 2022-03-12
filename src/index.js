@@ -1,6 +1,6 @@
-import './index.css';
+import './index.less';
 import Ui from './ui';
-import {ICON} from './icon'
+import {ICON} from './common/icon';
 
 export default class Image {
     static get toolbox() {
@@ -57,7 +57,7 @@ export default class Image {
             api,
             config,
             readOnly,
-            onAddImageData: (imageData) => this.addImageData(imageData),
+            updateImageData: (imageData) => this.updateImageData(imageData),
             onTuneToggled: (tuneName) => this.tuneToggled(tuneName),
         });
     }
@@ -67,6 +67,7 @@ export default class Image {
     }
 
     save() {
+        // console.log("save:" + JSON.stringify(this.data));
         return this.data;
     }
 
@@ -103,23 +104,15 @@ export default class Image {
      * @param {PasteEvent} event - event with pasted config
      */
     onPaste(event) {
-        // this.ui.showLoader();
         switch (event.type) {
             case 'tag':
-                Object.assign(this.data, {
-                    url: event.detail.data.src,
-                })
+                this.updateImageData({url: event.detail.data.src}, true);
                 break;
             case 'pattern':
-                Object.assign(this.data, {
-                    url: event.detail.data,
-                })
+                this.updateImageData({url: event.detail.data}, true);
                 break;
             case 'file':
-                this.onDropHandler(event.detail.file)
-                    .then((data) => {
-                        Object.assign(this.data, data)
-                    });
+                this.onDropHandler(event.detail.file).then((data) => this.updateImageData(data, true));
                 break;
             default:
                 break;
@@ -131,9 +124,12 @@ export default class Image {
      *
      * @param {object} imageData Image data
      */
-    addImageData(imageData) {
+    updateImageData(imageData, reload) {
         if (imageData.url) {
-            Object.assign(this.data, imageData)
+            Object.assign(this.data, imageData);
+        }
+        if (reload) {
+            this.ui.loadImage(imageData);
         }
     }
 

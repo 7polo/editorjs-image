@@ -30,17 +30,17 @@ export const make = (tagName, classNames = null, attributes = {}) => {
  * @returns {(function(...[*]=): void)|*}
  */
 export const debounce = (fn, wait = 50, immediate) => {
-    let timer = null
+    let timer = null;
     return function (...args) {
-        if (timer) clearTimeout(timer)
+        if (timer) clearTimeout(timer);
         if (immediate && !timer) {
-            fn.apply(this, args)
+            fn.apply(this, args);
         }
         timer = setTimeout(() => {
-            fn.apply(this, args)
-        }, wait)
-    }
-}
+            fn.apply(this, args);
+        }, wait);
+    };
+};
 
 /**
  * Validates Url

@@ -1,16 +1,16 @@
-import {make} from '../utils';
-import {ICON} from '../icon'
-import Tunes from './tunes';
 import 'viewerjs/dist/viewer.css';
+import {make} from '../common/utils';
+import {ICON} from '../common/icon';
+import Tunes from './tunes';
 import Viewer from 'viewerjs';
-import TabPanel from "./TabPanel";
+import TabPanel from './Tab';
 
 export default class Ui {
 
-    constructor({api, config, readOnly, onAddImageData, onTuneToggled,}) {
+    constructor({api, config, readOnly, updateImageData, onTuneToggled,}) {
         this.api = api;
         this.readOnly = readOnly;
-        this.onAddImageData = onAddImageData;
+        this.updateImageData = updateImageData;
 
         this.CSS = {
             baseClass: this.api.styles.block,
@@ -35,15 +35,6 @@ export default class Ui {
             },
         ];
 
-        // 选择面板
-        this.tabPanel = new TabPanel({
-            api,
-            config,
-            readOnly,
-            cssClasses: this.CSS,
-            onSelectImage: (imageData) => this.selectImage(imageData),
-        });
-
         this.tunes = new Tunes({
             cssClasses: {
                 settingsButton: this.api.styles.settingsButton,
@@ -53,49 +44,29 @@ export default class Ui {
             onTuneToggled,
         });
 
+        // 选择面板
+        this.tabPanel = new TabPanel({
+            api,
+            config,
+            onSelectImage: (imageData) => this.selectImage(imageData)
+        });
+
         this.nodes = {
             wrapper: null,
-            loader: null,
-            imageHolder: null,
-            image: null,
-            empty: null
+            imageHolder: null
         };
     }
 
     render(data) {
-        const wrapper = make('div', [this.CSS.baseClass, this.CSS.wrapper]);
-        const loader = make('div', this.CSS.loading);
-        const empty = make('div', 'images__empty', {
-            contentEditable: true,
-            onkeydown: (e) => {
-                e.preventDefault()
-            },
-            onclick: (e) => this.emptyClick(e),
-        });
-        const image = make('img', '', {
-            onload: () => this.onImageLoad(),
-            onerror: () => this.onImageLoadError(),
-            onclick: () => this.onImageClick()
-        });
-
+        this.nodes.wrapper = make('div', [this.CSS.baseClass, this.CSS.wrapper]);
         this.nodes.imageHolder = make('div', this.CSS.imageHolder);
-
-        this.nodes.wrapper = wrapper;
-        this.nodes.loader = loader;
-        this.nodes.image = image;
-        this.nodes.empty = empty;
-
-        this.showEmptyImage(false)
         this.applySettings(data);
-
-        setTimeout(() => {
-            this.loadImage(data)
-            if (!data.url) {
-                this.showTabPanel()
-            }
-        }, 60)
-
-        return wrapper;
+        this.nodes.wrapper.appendChild(this.nodes.imageHolder);
+        if (!data.url) {
+            this.showTabPanel();
+        }
+        this.loadImage(data);
+        return this.nodes.wrapper;
     }
 
     renderSettings(data) {
@@ -103,6 +74,7 @@ export default class Ui {
     }
 
     applyTune(tuneName, status) {
+        // todo 当前是否存在有效图片
         this.nodes.imageHolder.classList.toggle(`${this.CSS.imageHolder}--${tuneName}`, status);
 
         if (tuneName === 'stretched') {
@@ -122,48 +94,40 @@ export default class Ui {
     }
 
     selectImage(data) {
-        this.onAddImageData(data);
-        this.loadImage(data)
+        this.updateImageData(data);
+        this.loadImage(data);
+        this.tabPanel.destroy();
     }
 
     loadImage(data) {
+        this.nodes.imageHolder.innerHTML = '';
         if (data.url) {
-            this.nodes.wrapper.appendChild(this.nodes.loader);
-            this.nodes.empty.remove()
-            this.nodes.image.src = data.url;
-            return
-        }
-        this.showEmptyImage()
-    }
-
-    onImageLoad() {
-        this.nodes.imageHolder.prepend(this.nodes.image);
-        this.nodes.wrapper.appendChild(this.nodes.imageHolder);
-        this.nodes.loader.remove();
-    }
-
-    onImageLoadError() {
-        setTimeout(() => {
-            this.api.notifier.show({
-                message: 'Can not load the image, try again!',
-                style: 'error',
+            const loader = make('div', this.CSS.loading);
+            this.nodes.imageHolder.appendChild(loader);
+            const imageEl = make('img', 'image__picture__data', {
+                src: data.url,
+                onload: () => {
+                    loader.remove();
+                },
+                onerror: () => {
+                    this.api.notifier.show({
+                        message: 'Can not load the image, try again!',
+                        style: 'error',
+                    });
+                    loader.remove();
+                    this.showEmptyImage();
+                },
+                ondblclick: () => this.onImageClick()
             });
-            this.nodes.loader.remove();
-            this.showEmptyImage()
-        }, 300)
-    }
 
-    // removeCurrentBlock() {
-    //     Promise.resolve().then(() => {
-    //         const blockIndex = this.api.blocks.getCurrentBlockIndex();
-    //         this.api.blocks.delete(blockIndex);
-    //     }).catch((err) => {
-    //         console.error(err);
-    //     });
-    // }
+            this.nodes.imageHolder.appendChild(imageEl);
+            return;
+        }
+        this.showEmptyImage();
+    }
 
     onImageClick() {
-        const viewer = new Viewer(this.nodes.image, {
+        const viewer = new Viewer(this.nodes.imageHolder, {
             inline: false,
             navbar: false,
             title: false,
@@ -181,32 +145,26 @@ export default class Ui {
                 flipHorizontal: 4,
                 flipVertical: 4,
             },
-            hidden(event) {
-                viewer.destroy()
+            hidden() {
+                viewer.destroy();
             }
         });
-        viewer.show()
+        viewer.show();
+    }
+
+    showEmptyImage() {
+        this.nodes.imageHolder.innerHTML = '';
+        const emptyImg = make('div', 'images__empty', {
+            contentEditable: true,
+            onclick: () => {
+                this.showTabPanel();
+            }
+        });
+        emptyImg.innerHTML = `<span>${ICON.empty}</span> <span>添加图片</span>`;
+        this.nodes.imageHolder.appendChild(emptyImg);
     }
 
     showTabPanel() {
-        const tabPanel = this.tabPanel.render();
-        if (tabPanel) {
-            this.nodes.wrapper.appendChild(tabPanel);
-        }
-    }
-
-    showEmptyImage(rendered) {
-        console.log("xxxx")
-        this.nodes.empty.innerHTML = rendered !== false ? `${ICON.empty} <div>添加图片</div>` : `<div> </div>`
-        this.nodes.wrapper.appendChild(this.nodes.empty)
-    }
-
-    emptyClick(event) {
-        if (this.readOnly) {
-            return
-        }
-        event.preventDefault();
-        event.stopPropagation();
-        this.showTabPanel()
+        this.nodes.wrapper.appendChild(this.tabPanel.render());
     }
 }

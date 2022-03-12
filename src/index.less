@@ -1,0 +1,145 @@
+.inline-image {
+  .cdx-loader {
+    min-height: 200px;
+    border: none;
+    margin: auto;
+  }
+
+  .cdx-input {
+    margin-top: 10px;
+  }
+
+  .image__picture__data {
+    width: 100%;
+  }
+
+  .inline-image__picture--withBorder {
+    border: 1px solid #e8e8eb;
+    padding: 1px;
+  }
+
+  .inline-image__picture--withBackground {
+    background: #eff2f5;
+    padding: 10px;
+    text-align: center;
+
+    img {
+      max-width: 60%;
+      margin: 0 auto;
+    }
+  }
+
+  .inline-image__picture--stretched {
+    img {
+      max-width: none;
+      width: 100%;
+    }
+  }
+
+  .images__empty {
+    color: rgba(55, 53, 47, 0.6);
+    padding: 12px 36px 12px 12px;
+    display: flex;
+    align-items: center;
+    text-align: left;
+    overflow: hidden;
+    background: rgb(242, 241, 238);
+    font-size: 13px;
+    outline: none;
+    cursor: pointer;
+    caret-color: transparent;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
+
+.inline-image__tab-panel {
+  background: white;
+  min-width: 600px;
+  padding: 10px;
+  border-radius: 4px;
+  z-index: 9999;
+  max-height: 600px;
+  overflow: auto;
+  box-shadow: rgba(15, 15, 15, 0.05) 0 0 0 1px,
+  rgba(15, 15, 15, 0.1) 0 3px 6px,
+  rgba(15, 15, 15, 0.2) 0 9px 24px;
+
+  .inline-image__tab-wrapper {
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-bottom-color: lightgray;
+    margin-bottom: 10px;
+    padding-bottom: 4px;
+
+    .inline-image__tab {
+      cursor: pointer;
+      font-size: 13px;
+      margin-right: 10px;
+      display: inline-block;
+
+      &.active {
+        border-width: 0 0 3px 0;
+        border-style: solid;
+        border-color: #388ae5;
+      }
+
+      &:hover {
+        background: #eff2f5;
+      }
+    }
+  }
+
+  .inline-image__content {
+    display: none;
+  }
+
+  .inline-image__content.show {
+    display: block;
+  }
+
+  .inline-image__embed-button {
+    width: 50%;
+    background-color: #388ae5;
+    user-select: none;
+    color: white;
+    text-align: center;
+    margin: 20px auto;
+    cursor: pointer;
+    font-size: 14px;
+
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+
+  .inline-image__image-gallery {
+    max-height: 400px;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    background: white;
+    margin: 5px;
+
+    .inline-image__img-wrapper {
+      width: 25%;
+
+      .inline-image__thumb {
+        display: block;
+        object-fit: cover;
+        border-radius: 10px;
+        width: 90%;
+        height: 105px;
+        padding: 5px;
+        object-position: center 0;
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+.viewer-canvas > img {
+  background-color: rgb(238, 238, 238);
+}

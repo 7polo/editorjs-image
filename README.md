@@ -4,25 +4,45 @@ Image Tool for Editor.js 2.0
 ## Feature
 - Embed Url ✌️ 
 - Unsplash ✌️
-- upload interface
+- upload ✌️
+- extend 
 - image viewer ✌️ (use by viewerjs)
 
-embed url
+### tab
+#### embed url
 ![](./assert/url.png)
 
-upsplash
+#### upsplash
 ![](./assert/upsplash.png)
 
-view by click image
+#### upload
+![](./assert/upload.png)
+
+
+#### extend
+just add any tab you wanted
+
+---
+
+### viewer
+
+just double click the image
 ![](./assert/view.png)
+
+
+---
+
+
 ## Usage
 
 Add a new Tool to the `tools` property of the Editor.js initial config.
 
+1. npm
 ```nodejs
 npm i @7polo/editorjs-image
 ```
 
+2. init & config
 ```javascript
 var editor = EditorJS({
   ...
@@ -30,10 +50,22 @@ var editor = EditorJS({
     ...
     image: {
         class: Image,
-            config: {
-                unsplash: {
-                    search: searchImages
+        config: {
+            unsplash: {
+                search: ()=> {
+                    return new Promise(function(resolve){
+                        // resp from api : https://api.unsplash.com/search/photos 
+                        resolve({});
+                    })
                 }
+            },
+            upload: {
+                doUplaod: ()=> {
+                    return new Promise(function(resolve){
+                        resolve({url});
+                    })
+                }
+            }
         }
     }
   }

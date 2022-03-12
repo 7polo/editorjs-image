@@ -1,4 +1,4 @@
-import { make } from '../utils';
+import { make } from '../common/utils';
 
 /**
  * Render editor Block Tunes
