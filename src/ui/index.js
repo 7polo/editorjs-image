@@ -62,9 +62,6 @@ export default class Ui {
         this.nodes.imageHolder = make('div', this.CSS.imageHolder);
         this.applySettings(data);
         this.nodes.wrapper.appendChild(this.nodes.imageHolder);
-        if (!data.url) {
-            this.showTabPanel();
-        }
         this.loadImage(data);
         return this.nodes.wrapper;
     }
