@@ -63,11 +63,15 @@ export default class Image {
     }
 
     render() {
+        setTimeout(() => {
+            if (!this.data.url) {
+                this.ui.showTabPanel();
+            }
+        }, 100);
         return this.ui.render(this.data);
     }
 
     save() {
-        // console.log("save:" + JSON.stringify(this.data));
         return this.data;
     }
 
