@@ -19,12 +19,6 @@ export default class EmbedUrlTabPanel {
                     this.choiceImage();
                     return false;
                 }
-            },
-            onkeyup:(e)=> {
-                e.stopPropagation();
-            },
-            input: (e)=> {
-                e.stopPropagation();
             }
         });
 

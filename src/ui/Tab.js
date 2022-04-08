@@ -46,7 +46,6 @@ export default class TabPanel {
         }
     }
 
-
     render() {
         if (this.rendered) {
             return;
@@ -93,13 +92,10 @@ export default class TabPanel {
             if (tab && tab.panel && tab.panel.focus) {
                 tab.panel.focus();
             }
-        }, 60);
-        // document.body.appendChild(wrapper);
-        // 点击事件
-        setTimeout(() => {
+
             document.removeEventListener('click', this.onDocumentClick);
             document.addEventListener('click', this.onDocumentClick);
-        }, 100);
+        }, 60);
         return wrapper;
     }
 

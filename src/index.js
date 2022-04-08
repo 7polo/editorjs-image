@@ -128,7 +128,7 @@ export default class Image {
      *
      * @param {object} imageData Image data
      */
-    updateImageData(imageData, reload) {
+    updateImageData(imageData, reload=false) {
         if (imageData.url) {
             Object.assign(this.data, imageData);
         }
