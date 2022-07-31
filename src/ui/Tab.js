@@ -52,7 +52,7 @@ export default class TabPanel {
         }
 
         this.rendered = true;
-        const wrapper = make('div', this.cssClasses.tabPanel);
+        const wrapper = make('div', this.cssClasses.tabPanel, {contentEditable: false});
         const tabWrapper = make('div', this.cssClasses.tabWrapper);
         wrapper.appendChild(tabWrapper);
         wrapper.dataset.mutationFree = 'true';

@@ -44,6 +44,8 @@ export default class Image {
      */
     constructor({data, api, config, readOnly}) {
         this.readOnly = readOnly;
+        this.api = api;
+        this.config = config;
 
         this.data = {
             url: data.url || '',
@@ -68,10 +70,11 @@ export default class Image {
                 this.ui.showTabPanel();
             }
         }, 100);
-        return this.ui.render(this.data);
+        return  this.ui.render(this.data);
     }
 
     save() {
+        console.log(this.data);
         return this.data;
     }
 
@@ -89,16 +92,14 @@ export default class Image {
      * @returns {Promise<InlineImageData>}
      */
     onDropHandler(file) {
-        const reader = new FileReader();
-
-        reader.readAsDataURL(file);
-
         return new Promise((resolve) => {
-            reader.onload = (event) => {
-                resolve({
-                    url: event.target.result
+            if (this.config.upload && this.config.upload.doUpload) {
+                this.config.upload.doUpload([file]).then(({url}) => {
+                    resolve({
+                        url: url
+                    });
                 });
-            };
+            }
         });
     }
 
@@ -154,7 +155,7 @@ export default class Image {
      */
     tuneToggled(tuneName) {
         const value = !this.data[tuneName];
-        Object.assign(this.data, {[tuneName]: value})
+        Object.assign(this.data, {[tuneName]: value});
         this.ui.applyTune(tuneName, value);
     }
 }

@@ -58,12 +58,9 @@ export default class Ui {
     }
 
     render(data) {
-        this.nodes.wrapper = make('div', [this.CSS.baseClass, this.CSS.wrapper]);
-        this.nodes.imageHolder = make('div', this.CSS.imageHolder);
+        this.nodes.wrapper = make('div', [this.CSS.baseClass, this.CSS.wrapper], {contentEditable: true});
+        this.nodes.imageHolder = make('div', this.CSS.imageHolder, {contentEditable: false});
         this.applySettings(data);
-        // 占位用的，不然会报错
-        const input = make('span', ['image__picture__input'], {contentEditable: true});
-        this.nodes.wrapper.appendChild(input);
         this.nodes.wrapper.appendChild(this.nodes.imageHolder);
         this.loadImage(data);
         return this.nodes.wrapper;

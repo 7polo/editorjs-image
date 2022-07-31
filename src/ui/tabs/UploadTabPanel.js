@@ -18,8 +18,8 @@ export default class UploadTabPanel {
         const embedImageButton = make('div', ['inline-image__embed-button', 'cdx-input'], {
             innerHTML: 'Embed Image',
             onclick: () => {
-                this.config.upload.doUpload().then(({url}) => {
-                    console.log(url)
+                const files =  this.nodes.input.files;
+                this.config.upload.doUpload(files).then(({url}) => {
                     this.onSelectImage({url});
                 });
             }
